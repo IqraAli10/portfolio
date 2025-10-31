@@ -22,8 +22,7 @@ const Hero = () => {
           </h1>
           <p className={`${styles.heroSubText} mt-2 text-white-100`}>
             AI Developer & Full Stack Developer<br className='sm:block hidden' />
-            interfaces and web applications
-          </p>
+            crafting smooth user experiences<br className='sm:block hidden' /> with modern web technologies          </p>
         </div>
       </div>
 
