@@ -37,7 +37,7 @@ const RotatingModel = ({ groupRef, object, isMobile }) => {
   });
 
   return (
-    <group ref={groupRef} rotation={[0, 0, 0]} position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}>
+    <group ref={groupRef} rotation={[0, 0, 0]} position={isMobile ? [-0.2, -2.8, -2.2] : [-0.35, -3.0, -1.5]}>
       <primitive
         object={object}
         scale={isMobile ? 0.7 : 0.75}
@@ -75,9 +75,9 @@ const ComputersCanvas = () => {
     <Canvas
       frameloop='always'
       shadows
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
+      gl={{ preserveDrawingBuffer: false, powerPreference: 'high-performance', antialias: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls

@@ -25,15 +25,22 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const p = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setProgress(p);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <nav
-      className={`${
-        styles.paddingX
-      } w-full flex items-center py-5 fixed top-0 z-20 ${
-        scrolled ? "bg-primary" : "bg-transparent"
-      }`}
-    >
-      <div className='w-full flex justify-between items-center max-w-7xl mx-auto'>
+    <nav className={`${styles.paddingX} w-full flex items-center py-3 sm:py-5 fixed top-0 z-20`}>
+      <div className='w-full flex justify-between items-center max-w-7xl mx-auto ai-nav ai-nav-shimmer rounded-2xl px-4 py-3 relative'>
         <Link
           to='/'
           className='flex items-center gap-2'
@@ -42,22 +49,26 @@ const Navbar = () => {
             window.scrollTo(0, 0);
           }}
         >
-          <div className='w-9 h-9 rounded-full bg-gradient-to-br from-[#915EFF] to-[#2F80ED] flex items-center justify-center text-white text-[18px] font-extrabold'>
-            I
-          </div>
-          <p className='text-white text-[18px] font-bold cursor-pointer flex '>
-            Iqra &nbsp;
-            <span className='sm:block hidden'> | AI Developer & Full Stack Developer</span>
+          <img
+            src='/girl.png'
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><defs><linearGradient id="g" x1="0" x2="36" y1="0" y2="36" gradientUnits="userSpaceOnUse"><stop stop-color="%23915EFF"/><stop offset="1" stop-color="%232F80ED"/></linearGradient></defs><circle cx="18" cy="18" r="18" fill="url(%23g)"/></svg>';
+            }}
+            alt='avatar'
+            className='w-9 h-9 rounded-full object-cover shadow-[0_0_12px_rgba(145,94,255,0.35)]'
+          />
+          <p className='ai-brand text-[18px] font-bold cursor-pointer flex'>
+            Iqra&nbsp;
+            <span className='sm:block hidden'>| AI Developer & Full Stack Developer</span>
           </p>
         </Link>
 
-        <ul className='list-none hidden sm:flex flex-row gap-10'>
+        <ul className='list-none hidden sm:flex flex-row gap-6'>
           {navLinks.map((nav) => (
             <li
               key={nav.id}
-              className={`${
-                active === nav.title ? "text-white" : "text-secondary"
-              } hover:text-white text-[18px] font-medium cursor-pointer`}
+              className={`${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"} hover:text-white text-[16px] font-medium cursor-pointer ai-pill px-3 py-1 rounded-full`}
               onClick={() => setActive(nav.title)}
             >
               <a href={`#${nav.id}`}>{nav.title}</a>
@@ -73,29 +84,28 @@ const Navbar = () => {
             onClick={() => setToggle(!toggle)}
           />
 
-          <div
-            className={`${
-              !toggle ? "hidden" : "flex"
-            } p-6 black-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] z-10 rounded-xl`}
-          >
-            <ul className='list-none flex justify-end items-start flex-1 flex-col gap-4'>
-              {navLinks.map((nav) => (
-                <li
-                  key={nav.id}
-                  className={`font-poppins font-medium cursor-pointer text-[16px] ${
-                    active === nav.title ? "text-white" : "text-secondary"
-                  }`}
-                  onClick={() => {
-                    setToggle(!toggle);
-                    setActive(nav.title);
-                  }}
-                >
-                  <a href={`#${nav.id}`}>{nav.title}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {toggle && (
+            <div className='fixed inset-0 z-30 bg-black/60 backdrop-blur-sm' onClick={() => setToggle(false)}>
+              <div className='ai-nav rounded-none px-6 py-5 absolute top-0 left-0 right-0'>
+                <ul className='list-none flex flex-col gap-5'>
+                  {navLinks.map((nav) => (
+                    <li
+                      key={nav.id}
+                      className={`font-poppins font-medium cursor-pointer text-[18px] ${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"}`}
+                      onClick={() => {
+                        setToggle(false);
+                        setActive(nav.title);
+                      }}
+                    >
+                      <a href={`#${nav.id}`}>{nav.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
+        <div className='ai-progress' style={{ width: `${progress}%` }} />
       </div>
     </nav>
   );

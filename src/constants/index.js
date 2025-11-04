@@ -131,7 +131,7 @@ const experiences = [
   {
     title: "Full Stack Developer",
     company_name: "Freelance",
-    icon: shopify,
+    icon: reactjs,
     iconBg: "#E6DEDD",
     date: "2021 - Present",
     points: [
