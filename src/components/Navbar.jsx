@@ -84,16 +84,18 @@ const Navbar = () => {
         </ul>
 
         <div className='sm:hidden flex flex-1 justify-end items-center'>
-          <img
-            src={toggle ? close : menu}
-            alt='menu'
-            className='w-[28px] h-[28px] object-contain'
-            onClick={() => setToggle(!toggle)}
-          />
+          {!toggle && (
+            <img
+              src={menu}
+              alt='menu'
+              className='w-[28px] h-[28px] object-contain'
+              onClick={() => setToggle(true)}
+            />
+          )}
 
           {toggle && (
-            <div className='fixed inset-0 z-50 bg-primary/95'>
-              <div className='max-w-7xl mx-auto px-6 pt-5'>
+            <div className='fixed inset-0 z-50 ai-menu-backdrop' onClick={() => setToggle(false)}>
+              <div className='ai-menu-card ai-menu-panel mx-4 mt-6 rounded-2xl p-5' onClick={(e)=>e.stopPropagation()}>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
                     <img src='/girl.png' alt='' className='w-8 h-8 rounded-full' />
@@ -103,20 +105,23 @@ const Navbar = () => {
                     <img src={close} alt='close' className='w-[28px] h-[28px] object-contain' />
                   </button>
                 </div>
-                <ul className='mt-6 list-none flex flex-col gap-6 ai-menu-panel'>
+                <ul className='mt-5 list-none flex flex-col gap-4'>
                   {navLinks.map((nav) => (
                     <li
                       key={nav.id}
-                      className={`font-poppins font-medium cursor-pointer text-[20px] ${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"}`}
-                      onClick={() => {
-                        setToggle(false);
-                        setActive(nav.title);
-                      }}
+                      className={`font-poppins font-medium cursor-pointer text-[18px] ${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"}`}
+                      onClick={() => { setToggle(false); setActive(nav.title); }}
                     >
                       <a href={`#${nav.id}`}>{nav.title}</a>
                     </li>
                   ))}
                 </ul>
+                <div className='mt-6 flex items-center gap-3'>
+                  <a href='#contact' className='ai-menu-btn text-white text-[14px]'>
+                    <span>Contact</span>
+                  </a>
+                  <a href='https://www.linkedin.com/in/iqra-ali-178531254/' target='_blank' rel='noreferrer' className='ai-menu-btn text-white text-[14px]'>LinkedIn</a>
+                </div>
               </div>
             </div>
           )}

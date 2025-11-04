@@ -57,9 +57,8 @@ const About = () => {
         ) : (
           <>
             <KnowledgeInline />
-            <button onClick={() => setShowSkills(false)} className='mt-6 ai-btn'>
+            <button aria-label='Close skills' onClick={() => setShowSkills(false)} className='mt-6 ai-btn'>
               <span className='dot' />
-              <span className='uppercase tracking-wider text-[12px]'>Back</span>
             </button>
           </>
         )}

@@ -7,16 +7,27 @@ import AICursor from "./components/AICursor";
 
 const App = () => {
   const [chatOpen, setChatOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showCursor, setShowCursor] = useState(false);
   React.useEffect(() => {
-    const t1 = setTimeout(() => setShowWelcome(true), 900);
-    const t2 = setTimeout(() => setShowWelcome(false), 6000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const mq = window.matchMedia("(pointer: fine) and (min-width: 768px)");
+    const update = () => setShowCursor(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const shownOnceRef = React.useRef(false);
+  React.useEffect(() => {
+    if (chatOpen) return; // never show while chat is open
+    if (shownOnceRef.current) return;
+    const t1 = setTimeout(() => { setShowWelcome(true); }, 600);
+    const t2 = setTimeout(() => { setShowWelcome(false); shownOnceRef.current = true; }, 3500);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [chatOpen]);
   return (
     <BrowserRouter>
       <div className='relative z-0 bg-primary'>
-        <AICursor />
+        {showCursor && <AICursor />}
         <div className='bg-hero-pattern bg-cover bg-no-repeat bg-center'>
           <Navbar />
           <Hero />

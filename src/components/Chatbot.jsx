@@ -101,11 +101,14 @@ Contact: Email: aiqra9786@gmail.com, LinkedIn: https://www.linkedin.com/in/iqra-
         </div>
         <div className='ai-chat-list' ref={listRef}>
           {messages.map((m, i) => (
-            <div key={i} className={`ai-chat-msg ${m.role === "user" ? "ai-chat-user" : "ai-chat-model"}`}>
-              <div>{m.text}</div>
-              {m.ts && (
-                <div className='ai-msg-time'>{new Date(m.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-              )}
+            <div key={i} className={`ai-chat-row ${m.role === "user" ? "user" : "model"}`}>
+              {m.role !== "user" && <span className='ai-avatar ai-avatar-img' />}
+              <div className={`ai-chat-msg ${m.role === "user" ? "ai-chat-user" : "ai-chat-model"}`}>
+                <div>{m.text}</div>
+                {m.ts && (
+                  <div className='ai-msg-time'>{new Date(m.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                )}
+              </div>
             </div>
           ))}
           {loading && <div className='ai-chat-typing'>Thinking…</div>}
