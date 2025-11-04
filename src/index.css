@@ -416,8 +416,10 @@
 .ai-chat-input { display: flex; gap: 8px; padding: 10px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.1); }
 .ai-chat-input textarea { flex: 1; background: rgba(255,255,255,0.04); color: #fff; border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.06); resize: none; height: 44px; line-height: 1.2; }
 @media (max-width: 640px) {
-  .ai-chat-overlay { align-items: center; justify-content: center; }
-  .ai-chat { width: 100%; height: 100vh; border-radius: 0; margin: 0; animation: aiChatIn 220ms ease-out forwards; padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+  .ai-chat-overlay { align-items: flex-end; justify-content: center; }
+  .ai-chat { width: 100%; height: 100dvh; border-radius: 0; margin: 0; animation: aiChatIn 220ms ease-out forwards; padding-bottom: max(0px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+  .ai-chat-list { flex: 1; min-height: 0; overflow-y: auto; }
+  .ai-chat-input { flex-shrink: 0; }
 }
 
 @keyframes aiChatIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

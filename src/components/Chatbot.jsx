@@ -18,7 +18,14 @@ const Chatbot = ({ open, onClose }) => {
   }, [messages, open]);
 
   useEffect(() => {
-    if (open && inputRef.current) inputRef.current.focus();
+    if (open && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+        setTimeout(() => {
+          inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }, 200);
+    }
   }, [open]);
 
   useEffect(() => {
@@ -118,6 +125,11 @@ Contact: Email: aiqra9786@gmail.com, LinkedIn: https://www.linkedin.com/in/iqra-
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKey}
+            onFocus={() => {
+              setTimeout(() => {
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }, 100);
+            }}
             placeholder='Type a message…'
             ref={inputRef}
           />
