@@ -38,8 +38,15 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // lock body scroll when mobile menu open
+  useEffect(() => {
+    if (toggle) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
+  }, [toggle]);
+
   return (
-    <nav className={`${styles.paddingX} w-full flex items-center py-3 sm:py-5 fixed top-0 z-20`}>
+    <nav className={`${styles.paddingX} w-full flex items-center py-3 sm:py-5 fixed top-0 z-40`}>
       <div className='w-full flex justify-between items-center max-w-7xl mx-auto ai-nav ai-nav-shimmer rounded-2xl px-4 py-3 relative'>
         <Link
           to='/'
@@ -85,13 +92,22 @@ const Navbar = () => {
           />
 
           {toggle && (
-            <div className='fixed inset-0 z-30 bg-black/60 backdrop-blur-sm' onClick={() => setToggle(false)}>
-              <div className='ai-nav rounded-none px-6 py-5 absolute top-0 left-0 right-0'>
-                <ul className='list-none flex flex-col gap-5'>
+            <div className='fixed inset-0 z-50 bg-primary/95'>
+              <div className='max-w-7xl mx-auto px-6 pt-5'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-2'>
+                    <img src='/girl.png' alt='' className='w-8 h-8 rounded-full' />
+                    <span className='ai-brand text-[18px] font-bold'>Iqra</span>
+                  </div>
+                  <button aria-label='Close menu' onClick={() => setToggle(false)}>
+                    <img src={close} alt='close' className='w-[28px] h-[28px] object-contain' />
+                  </button>
+                </div>
+                <ul className='mt-6 list-none flex flex-col gap-6 ai-menu-panel'>
                   {navLinks.map((nav) => (
                     <li
                       key={nav.id}
-                      className={`font-poppins font-medium cursor-pointer text-[18px] ${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"}`}
+                      className={`font-poppins font-medium cursor-pointer text-[20px] ${active === nav.title ? "text-white ai-link ai-link-active" : "text-secondary ai-link"}`}
                       onClick={() => {
                         setToggle(false);
                         setActive(nav.title);

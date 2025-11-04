@@ -37,10 +37,10 @@ const RotatingModel = ({ groupRef, object, isMobile }) => {
   });
 
   return (
-    <group ref={groupRef} rotation={[0, 0, 0]} position={isMobile ? [-0.2, -2.8, -2.2] : [-0.35, -3.0, -1.5]}>
+    <group ref={groupRef} rotation={[0, 0, 0]} position={isMobile ? [-0.3, -3.2, -2.2] : [-0.35, -3.0, -1.5]}>
       <primitive
         object={object}
-        scale={isMobile ? 0.7 : 0.75}
+        scale={isMobile ? 0.6 : 0.75}
         rotation={[-0.01, -0.2, -0.1]}
       />
     </group>

@@ -6,11 +6,11 @@ import AIStatus from "../components/AIStatus";
 
 const Hero = () => {
   return (
-    <section className={`relative w-full h-screen mx-auto`}>
+    <section className={`relative w-full min-h-[100svh] mx-auto flex items-center py-12 sm:py-0`}>
       <div
-        className={`absolute inset-0 top-[100px] sm:top-[120px] z-20 max-w-7xl mx-auto ${styles.paddingX} flex flex-row items-start gap-5`}
+        className={`z-20 max-w-7xl mx-auto ${styles.paddingX} w-full flex flex-col md:flex-row items-start gap-5`}
       >
-        <div className='flex flex-col justify-center items-center mt-5'>
+        <div className='hidden md:flex flex-col justify-center items-center mt-5'>
           <div className='w-5 h-5 rounded-full bg-[#915EFF]' />
           <div className='w-1 sm:h-80 h-40 violet-gradient' />
         </div>
@@ -20,16 +20,21 @@ const Hero = () => {
           <h1 className={`${styles.heroHeadText} text-white`}>
             Hi, I'm <span className='text-[#915EFF]'>Iqra</span>
           </h1>
-          <p className={`${styles.heroSubText} mt-2 text-white-100`}>
+          <p className={`${styles.heroSubText} mt-2 text-white-100 max-w-2xl`}>
           AI & Full Stack Developer<br className='sm:block hidden' />
           Crafting smart interfaces<br className='sm:block hidden' />
           and seamless web experiences.
           </p>
+          {/* Mobile: floating avatar directly under text */}
+          <div className='block md:hidden relative z-10 mt-6 flex justify-center'>
+            <img src='/girl.png' alt='Iqra' className='w-40 xs:w-48 ai-photo-glow animate-float' />
+          </div>
         </div>
       </div>
 
       {/* Canvas: below text on mobile, behind on sm+ */}
-      <div className='relative z-10 mt-8 sm:mt-0 sm:absolute sm:inset-0 sm:z-10 pointer-events-none'>
+      {/* 3D Computer only on md+ (laptops/desktops) */}
+      <div className='hidden md:block relative z-10 mt-6 md:mt-0 md:absolute md:inset-0 md:z-10 pointer-events-none'>
         <ComputersCanvas />
       </div>
 
@@ -41,7 +46,7 @@ const Hero = () => {
       <div className='hidden lg:block ai-orb w-[80px] h-[80px] right-[30%] top-[38%] animate-float-y z-0'></div>
       <div className='hidden xl:block ai-beam left-[8%] top-[22%] rotate-12 z-0'></div>
 
-      <div className='absolute z-20 xs:bottom-10 bottom-32 w-full flex justify-center items-center'>
+      <div className='absolute z-20 xs:bottom-6 bottom-24 w-full flex justify-center items-center'>
         <a href='#about'>
           <div className='w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2'>
             <motion.div
@@ -49,7 +54,7 @@ const Hero = () => {
                 y: [0, 24, 0],
               }}
               transition={{
-                duration: 1.5,
+                duration: 1.2,
                 repeat: Infinity,
                 repeatType: "loop",
               }}
