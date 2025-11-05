@@ -95,7 +95,7 @@ const Navbar = () => {
 
           {toggle && (
             <div className='fixed inset-0 z-50 ai-menu-backdrop' onClick={() => setToggle(false)}>
-              <div className='ai-menu-card ai-menu-panel mx-4 mt-6 rounded-2xl p-5' onClick={(e)=>e.stopPropagation()}>
+              <div className='ai-menu-card ai-drawer mx-0 rounded-b-2xl p-5' onClick={(e)=>e.stopPropagation()}>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
                     <img src='/girl.png' alt='' className='w-8 h-8 rounded-full' />

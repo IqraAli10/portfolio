@@ -12,6 +12,7 @@ const Chatbot = ({ open, onClose }) => {
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const [hasAvatar, setHasAvatar] = useState(false);
+  const [kbOffset, setKbOffset] = useState(0);
 
   useEffect(() => {
     if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
@@ -40,6 +41,23 @@ const Chatbot = ({ open, onClose }) => {
     else document.body.classList.remove('ai-cursor-off');
     return () => document.body.classList.remove('ai-cursor-off');
   }, [open]);
+
+  // Track mobile keyboard height using VisualViewport and pad chat bottom so input stays visible
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const onVV = () => {
+      const offset = Math.max(0, window.innerHeight - vv.height);
+      setKbOffset(offset);
+    };
+    onVV();
+    vv.addEventListener('resize', onVV);
+    vv.addEventListener('scroll', onVV);
+    return () => {
+      vv.removeEventListener('resize', onVV);
+      vv.removeEventListener('scroll', onVV);
+    };
+  }, []);
 
   if (!open) return null;
 
@@ -98,7 +116,7 @@ Contact: Email: aiqra9786@gmail.com, LinkedIn: https://www.linkedin.com/in/iqra-
 
   return (
     <div className='ai-chat-overlay' onClick={onClose}>
-      <div className='ai-chat' onClick={(e) => e.stopPropagation()}>
+      <div className='ai-chat' onClick={(e) => e.stopPropagation()} style={{ paddingBottom: `calc(max(env(safe-area-inset-bottom), 0px) + ${kbOffset}px)` }}>
         <div className='ai-chat-header'>
           <div className='ai-chat-title flex items-center gap-2'>
             <span className={`ai-avatar${hasAvatar ? " ai-avatar-img" : ""}`}>I</span>
