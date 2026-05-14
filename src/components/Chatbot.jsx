@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const MODEL = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.0-flash";
+const MODEL = import.meta.env.VITE_GEMINI_MODEL || "gemini-flash-latest";
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 const Chatbot = ({ open, onClose }) => {
