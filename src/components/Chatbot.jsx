@@ -98,6 +98,14 @@ Contact: Email: aiqra9786@gmail.com, LinkedIn: https://www.linkedin.com/in/iqra-
       });
 
       const data = await res.json();
+      console.log("Gemini API Response:", data);
+      
+      if (data.error) {
+        setMessages((m) => [...m, { role: "model", text: `API Error: ${data.error.message}`, ts: Date.now() }]);
+        setLoading(false);
+        return;
+      }
+
       const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
       setMessages((m) => [...m, { role: "model", text: output, ts: Date.now() }]);
     } catch (e) {
