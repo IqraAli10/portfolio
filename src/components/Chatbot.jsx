@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const MODEL = import.meta.env.VITE_GEMINI_MODEL || "gemini-flash-latest";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
-
 const Chatbot = ({ open, onClose }) => {
   const [messages, setMessages] = useState([
     { role: "model", text: "Hi, I’m Iqra. How can I help you today?", ts: Date.now() },
@@ -61,60 +58,30 @@ const Chatbot = ({ open, onClose }) => {
 
   if (!open) return null;
 
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
-    setMessages((m) => [...m, { role: "user", text: trimmed, ts: Date.now() }]);
+    const conversation = [...messages, { role: "user", text: trimmed }]
+      .filter((message) => message.role === "user" || message.role === "model")
+      .map(({ role, text }) => ({ role, text }));
+    setMessages((current) => [...current, { role: "user", text: trimmed, ts: Date.now() }]);
     setInput("");
-    if (!apiKey) {
-      setMessages((m) => [
-        ...m,
-        { role: "model", text: "Gemini API key missing. Set VITE_GEMINI_API_KEY in your env.", ts: Date.now() },
-      ]);
-      return;
-    }
-
     setLoading(true);
     try {
-      const persona = `You are Iqra, an AI Developer & Full Stack Developer based in Pakistan. Speak as Iqra in first person. Be confident, creative, and modern.
-Bio: I’m passionate about building intelligent systems, creating seamless web experiences, and developing end-to-end scalable applications using modern technologies.
-Contact: Email: aiqra9786@gmail.com, LinkedIn: https://www.linkedin.com/in/iqra-ali-178531254/`;
-      const res = await fetch(`${GEMINI_ENDPOINT}?key=${apiKey}`, {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: persona },
-                { text: messages.map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.text}`).join("\n") + `\nUser: ${trimmed}` },
-              ],
-              role: "user",
-            },
-          ],
-        }),
+        body: JSON.stringify({ messages: conversation }),
       });
-
       const data = await res.json();
-      console.log("Gemini API Response:", data);
-      
-      if (data.error) {
-        setMessages((m) => [...m, { role: "model", text: `API Error: ${data.error.message}`, ts: Date.now() }]);
-        setLoading(false);
-        return;
-      }
-
-      const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
-      setMessages((m) => [...m, { role: "model", text: output, ts: Date.now() }]);
-    } catch (e) {
-      setMessages((m) => [...m, { role: "model", text: "Network error. Please try again.", ts: Date.now() }]);
+      if (!res.ok) throw new Error(data.error || "The AI service is temporarily unavailable. Please try again.");
+      setMessages((current) => [...current, { role: "model", text: data.reply || "Sorry, I couldn't generate a response.", ts: Date.now() }]);
+    } catch (error) {
+      setMessages((current) => [...current, { role: "model", text: error.message || "Network error. Please try again.", ts: Date.now() }]);
     } finally {
       setLoading(false);
     }
   };
-
   const handleKey = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

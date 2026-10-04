@@ -121,6 +121,17 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser to view the project.
 
+## Chat API setup
+
+The chat endpoint runs locally through Vite and is provided in production by the `api/chat.js` serverless function (for example, on Vercel). Set these server-side environment variables:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-3.1-flash-lite
+```
+
+Do not prefix the API key with `VITE_`: Vite exposes `VITE_` variables to browser code. After changing local environment variables, restart the dev server. For a static host without serverless functions, deploy the API function separately and configure the frontend to use that API host.
+
 ## <a name="snippets">🕸️ Snippets</a>
 
 <details>
