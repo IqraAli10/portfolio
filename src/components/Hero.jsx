@@ -1,70 +1,105 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import DigitalWorkspace from "./DigitalWorkspace";
 
-import { styles } from "../styles";
-import { ComputersCanvas } from "./canvas";
-import AIStatus from "../components/AIStatus";
+const Hero = ({ designMode, setDesignMode }) => {
+  const [easterEgg, setEasterEgg] = useState(false);
+  const [isPerforming, setIsPerforming] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [previewTouched, setPreviewTouched] = useState(false);
+  const [viewport, setViewport] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.matchMedia("(max-width: 767px)").matches ? "mobile" : "desktop");
+  const heroRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const sceneY = useTransform(scrollYProgress, [0, 1], [0, 75]);
+  const sceneOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.8, 0]);
+  const magneticX = useMotionValue(0);
+  const magneticY = useMotionValue(0);
+  const springX = useSpring(magneticX, { stiffness: 240, damping: 18, mass: 0.3 });
+  const springY = useSpring(magneticY, { stiffness: 240, damping: 18, mass: 0.3 });
+  const handleMagnet = (event) => {
+    if (reduceMotion || event.pointerType === "touch") return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    magneticX.set((event.clientX - rect.left - rect.width / 2) * 0.12);
+    magneticY.set((event.clientY - rect.top - rect.height / 2) * 0.12);
+  };
+  const resetMagnet = () => { magneticX.set(0); magneticY.set(0); };
+  useEffect(() => {
+    if (reduceMotion || previewTouched) { setIsPerforming(false); return undefined; }
+    setIsPerforming(true);
+    const timers = [
+      window.setTimeout(() => setViewport('tablet'), 4450),
+      window.setTimeout(() => setViewport('mobile'), 4950),
+      window.setTimeout(() => setViewport('desktop'), 5500),
+      window.setTimeout(() => { setIsPerforming(false); setViewport(window.matchMedia('(max-width: 767px)').matches ? 'mobile' : 'desktop'); }, 6100),
+    ];
+    return () => timers.forEach(window.clearTimeout);
+  }, [reduceMotion, previewTouched]);
 
-const Hero = () => {
   return (
-    <section className={`relative w-full min-h-[100svh] mx-auto flex items-center py-12 sm:py-0`}>
-      <div
-        className={`z-20 max-w-7xl mx-auto ${styles.paddingX} w-full flex flex-col md:flex-row items-start gap-5`}
-      >
-        <div className='hidden md:flex flex-col justify-center items-center mt-5'>
-          <div className='w-5 h-5 rounded-full bg-[#915EFF]' />
-          <div className='w-1 sm:h-80 h-40 violet-gradient' />
-        </div>
+    <section ref={heroRef} id='home' className={`hero-universe relative w-full min-h-[100svh] overflow-hidden ${isPerforming ? 'hero-is-performing' : ''}`} onPointerMove={(event) => { if (event.pointerType !== 'touch') { const rect = event.currentTarget.getBoundingClientRect(); event.currentTarget.style.setProperty('--canvas-x', `${event.clientX - rect.left}px`); event.currentTarget.style.setProperty('--canvas-y', `${event.clientY - rect.top}px`); } }}>
+      <div className='hero-atmosphere' aria-hidden='true' />
+      <div className='hero-design-canvas' aria-hidden='true'><svg viewBox='0 0 1000 600' preserveAspectRatio='none'><path d='M500 0V600M0 300H1000M260 300H740M500 110V490' /><circle cx='500' cy='300' r='5' /><circle cx='260' cy='300' r='3' /><circle cx='740' cy='300' r='3' /></svg><span className='canvas-measure canvas-measure--one'>72 / 0.95</span><span className='canvas-measure canvas-measure--two'>12 COL · 32 GAP</span><span className='canvas-measure canvas-measure--three'>BREAKPOINT · 768</span></div>
+      <motion.div className='hero-interface-scene' style={reduceMotion ? undefined : { y: sceneY, opacity: sceneOpacity }}>
+        <DigitalWorkspace viewport={viewport} setViewport={setViewport} introActive={isPerforming} />
+      </motion.div>
 
-        <div>
-          <AIStatus />
-          <h1 className={`${styles.heroHeadText} text-white`}>
-            Hi, I'm <span className='text-[#915EFF]'>Iqra</span>
-          </h1>
-          <p className={`${styles.heroSubText} mt-2 text-white-100 max-w-2xl`}>
-          AI & Full Stack Developer<br className='sm:block hidden' />
-          Crafting smart interfaces<br className='sm:block hidden' />
-          and seamless web experiences.
-          </p>
-          {/* Mobile: floating avatar directly under text */}
-          <div className='block md:hidden relative z-10 mt-6 flex justify-center'>
-            <img src='/girl.png' alt='Iqra' className='w-40 xs:w-48 ai-photo-glow animate-float' />
+      <div className='hero-content mx-auto flex min-h-[100svh] max-w-7xl items-center px-6 pb-20 pt-32 sm:px-10 lg:px-16'>
+        <motion.div
+          className='hero-copy relative z-10'
+          initial={reduceMotion ? false : "hidden"}
+          animate='visible'
+          variants={{ visible: { transition: { staggerChildren: 0.2, delayChildren: 0.3 } } }}
+        >
+          <motion.p className='hero-eyebrow' variants={heroReveal}>
+            <span className='hero-eyebrow-mark'>✳</span> Digital experiences, thoughtfully made
+          </motion.p>
+          <motion.h1 className='hero-title' variants={heroReveal} onPointerMove={(event) => { if (event.pointerType !== 'touch') { const rect = event.currentTarget.getBoundingClientRect(); event.currentTarget.style.setProperty('--type-x', `${(event.clientX - rect.left - rect.width / 2) * .008}px`); event.currentTarget.style.setProperty('--type-y', `${(event.clientY - rect.top - rect.height / 2) * .006}px`); } }} onPointerLeave={(event) => { event.currentTarget.style.setProperty('--type-x', '0px'); event.currentTarget.style.setProperty('--type-y', '0px'); }}>
+            Hi, I’m<span className='hero-name'>Iqra Bibi<span className='hero-period'>.</span><button type='button' className='hero-easter-star' aria-label='A little portfolio note' onClick={() => setEasterEgg((value) => !value)}>✳</button></span>
+          </motion.h1>
+          <AnimatePresence>{easterEgg && <motion.span className='hero-easter-note' initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}>yes, I designed this too.</motion.span>}</AnimatePresence>
+          <motion.p className='hero-role' variants={heroReveal}>
+            Frontend Developer <span>&</span><br /> UI Designer
+          </motion.p>
+          <motion.p className='hero-intro' variants={heroReveal}>
+            I design and build interactive digital experiences that feel as good as they look.
+          </motion.p>
+          <motion.div className='hero-actions' variants={heroReveal}>
+            <motion.a data-cursor-label='LET’S GO' style={{ x: springX, y: springY }} onPointerMove={handleMagnet} onPointerLeave={resetMagnet} className='hero-primary-link' href='#work' whileHover={reduceMotion ? undefined : { scale: 1.025 }} whileTap={{ scale: .98 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
+              Explore my work <span aria-hidden='true'>↗</span>
+            </motion.a>
+            <a className='hero-secondary-link' href='#contact'>Let’s connect <span aria-hidden='true'>↗</span></a>
+          </motion.div>
+          <motion.div className='hero-footnote' variants={heroReveal}>
+            <span className='hero-status-dot' /> Interface design <span className='hero-footnote-divider'>/</span> Creative code
+          </motion.div>
+        </motion.div>
+
+        <div className='hero-project-controls'>
+          <span className='hero-control-label'>One product <b>3 responsive views</b></span>
+          <div className='hero-control-tabs' role='group' aria-label='Focus the responsive preview'>
+            {["Desktop", "Tablet", "Mobile"].map((item, index) => (
+              <button key={item} type='button' onClick={() => { setPreviewTouched(true); setIsPerforming(false); setViewport(item.toLowerCase()); }} aria-pressed={viewport === item.toLowerCase()} className={viewport === item.toLowerCase() ? "is-active" : ""}>
+                <span>0{index + 1}</span>{item}
+              </button>
+            ))}
           </div>
+          <div className='hero-current-project'><span>Responsive interface concept</span><strong>Studio Space <i aria-hidden='true'>✳</i></strong></div>
         </div>
       </div>
 
-      {/* Canvas: below text on mobile, behind on sm+ */}
-      {/* 3D Computer only on md+ (laptops/desktops) */}
-      <div className='hidden md:block relative z-10 mt-6 md:mt-0 md:absolute md:inset-0 md:z-10 pointer-events-none'>
-        <ComputersCanvas />
-      </div>
-
-      {/* Creative AI-themed decor (kept); removed screen-like chip */}
-      <div className='hidden sm:block ai-orb w-[60px] h-[60px] left-[3%] top-[16%] animate-float-y z-0'></div>
-      <div className='hidden md:block ai-ring w-[260px] h-[260px] right-[22%] top-[8%] animate-spin-slow z-0'></div>
-      <div className='hidden md:block ai-orb w-[140px] h-[140px] left-[14%] bottom-[18%] animate-float-x z-0'></div>
-      <div className='hidden lg:block ai-ring w-[120px] h-[120px] right-[18%] bottom-[24%] animate-spin-slow z-0'></div>
-      <div className='hidden lg:block ai-orb w-[80px] h-[80px] right-[30%] top-[38%] animate-float-y z-0'></div>
-      <div className='hidden xl:block ai-beam left-[8%] top-[22%] rotate-12 z-0'></div>
-
-      <div className='absolute z-20 xs:bottom-6 bottom-24 w-full flex justify-center items-center'>
-        <a href='#about'>
-          <div className='w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2'>
-            <motion.div
-              animate={{
-                y: [0, 24, 0],
-              }}
-              transition={{
-                duration: 1.2,
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-              className='w-3 h-3 rounded-full bg-secondary mb-1'
-            />
-          </div>
-        </a>
+      <a className='hero-scroll-cue' href='#about'><span className='hero-scroll-line' /> Scroll to explore</a>
+      <div className='hero-coordinate' aria-hidden='true'>DIGITAL&nbsp;—&nbsp;INTERACTIVE&nbsp;—&nbsp;HUMAN</div>
+      <button type='button' className={`design-mode-toggle ${designMode ? 'is-active' : ''}`} aria-pressed={designMode} onClick={() => setDesignMode((value) => !value)}><i /> DESIGN MODE <span>{designMode ? 'ON' : 'OFF'}</span></button>
+      <div className='hero-floating-labels' aria-hidden='true'>
+        {['UI DESIGN', 'FRONTEND', 'RESPONSIVE', 'INTERACTION'].map((label, index) => <motion.span key={label} className={`hero-float-label hero-float-label--${index + 1}`} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ duration: .5, ease: [.22, 1, .36, 1], delay: 3 + index * .12 }}>{label}</motion.span>)}
       </div>
     </section>
   );
+};
+
+const heroReveal = {
+  hidden: { opacity: 0, y: 22, filter: "blur(8px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export default Hero;

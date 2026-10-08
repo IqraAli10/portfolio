@@ -46,8 +46,8 @@ const Navbar = () => {
   }, [toggle]);
 
   return (
-    <nav className={`${styles.paddingX} w-full flex items-center py-3 sm:py-5 fixed top-0 z-40`}>
-      <div className='w-full flex justify-between items-center max-w-7xl mx-auto ai-nav ai-nav-shimmer rounded-2xl px-4 py-3 relative'>
+    <nav className={`${styles.paddingX} w-full flex items-center py-3 sm:py-5 sticky top-0 z-40`}>
+      <div className='w-full flex justify-between items-center max-w-7xl mx-auto ai-nav ai-nav-shimmer rounded-2xl px-4 py-3 relative nav-enter'>
         <Link
           to='/'
           className='flex items-center gap-2'
@@ -60,14 +60,13 @@ const Navbar = () => {
             src='/girl.png'
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><defs><linearGradient id="g" x1="0" x2="36" y1="0" y2="36" gradientUnits="userSpaceOnUse"><stop stop-color="%23915EFF"/><stop offset="1" stop-color="%232F80ED"/></linearGradient></defs><circle cx="18" cy="18" r="18" fill="url(%23g)"/></svg>';
+              e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%23D8C6B5"/><text x="18" y="23" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23272321">IB</text></svg>';
             }}
             alt='avatar'
-            className='w-9 h-9 rounded-full object-cover shadow-[0_0_12px_rgba(145,94,255,0.35)]'
+            className='w-9 h-9 rounded-full object-cover shadow-[0_0_12px_rgba(169,130,114,0.22)]'
           />
           <p className='ai-brand text-[18px] font-bold cursor-pointer flex'>
-            Iqra&nbsp;
-            <span className='sm:block hidden'>| AI Developer & Full Stack Developer</span>
+            Iqra Bibi<span className='navbar-role sm:block hidden'> / Frontend Developer & UI Designer</span>
           </p>
         </Link>
 
@@ -85,12 +84,9 @@ const Navbar = () => {
 
         <div className='sm:hidden flex flex-1 justify-end items-center'>
           {!toggle && (
-            <img
-              src={menu}
-              alt='menu'
-              className='w-[28px] h-[28px] object-contain'
-              onClick={() => setToggle(true)}
-            />
+            <button type='button' aria-label='Open navigation menu' onClick={() => setToggle(true)} className='grid place-items-center rounded-lg p-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C9B6A3]'>
+              <img src={menu} alt='' className='w-[28px] h-[28px] object-contain' />
+            </button>
           )}
 
           {toggle && (

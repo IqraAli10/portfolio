@@ -1,35 +1,41 @@
-import React from "react";
+import { motion } from "framer-motion";
 
-import { BallCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { technologies } from "../constants";
+import { styles } from "../styles";
 
-const Tech = () => {
-  const [useStatic, setUseStatic] = React.useState(false);
-  React.useEffect(() => {
-    const mq = window.matchMedia('(max-width: 640px)');
-    const update = () => setUseStatic(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
+const skillGroups = [
+  { title: "Interface & frontend", detail: "Building responsive, component-led interfaces.", names: ["HTML 5", "CSS 3", "JavaScript", "TypeScript", "React JS", "Redux Toolkit", "Tailwind CSS"] },
+  { title: "Creative tools", detail: "Prototyping ideas and bringing interaction to life.", names: ["figma", "Three JS"] },
+  { title: "Backend & workflow", detail: "Connecting the interface to the systems behind it.", names: ["Node JS", "MongoDB", "git", "docker"] },
+];
 
-  return (
-    <div className='flex flex-row flex-wrap justify-center gap-10'>
-      {technologies.map((technology) => (
-        <div className='group relative w-28 h-28 flex items-center justify-center' key={technology.name} title={technology.name}>
-          {useStatic ? (
-            <img src={technology.icon} alt={technology.name} className='w-20 h-20 object-contain drop-shadow-[0_6px_20px_rgba(145,94,255,0.25)]' />
-          ) : (
-            <BallCanvas icon={technology.icon} />
-          )}
-          <span className='pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black/70 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap'>
-            {technology.name}
-          </span>
-        </div>
+const Tech = () => (
+  <div id='skills' className='tech-ecosystem'>
+    <motion.div variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: .55 } } }}>
+      <p className={styles.sectionSubText}>Tools I build with</p>
+      <h2 className={styles.sectionHeadText}>A considered toolkit.</h2>
+      <p className='tech-intro'>The right tool for the idea, with the craft to make it feel cohesive.</p>
+    </motion.div>
+    <div className='tech-groups'>
+      {skillGroups.map((group, groupIndex) => (
+        <motion.section key={group.title} className='tech-group' variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: .55, delay: groupIndex * .08 } } }}>
+          <div className='tech-group-heading'><span>0{groupIndex + 1}</span><div><h3>{group.title}</h3><p>{group.detail}</p></div></div>
+          <div className='tech-items'>
+            {group.names.map((name, index) => {
+              const technology = technologies.find((item) => item.name === name);
+              if (!technology) return null;
+              return <motion.button key={technology.name} type='button' className='tech-item' title={technology.name} whileHover={{ y: -4, rotateX: 4 }} whileTap={{ scale: .97 }} transition={{ type: "spring", stiffness: 360, damping: 22 }} style={{ "--tech-order": index }}>
+                <span className='tech-icon-frame'><img src={technology.icon} alt='' loading='lazy' /></span>
+                <span>{technology.name}</span>
+                <i aria-hidden='true'>↗</i>
+              </motion.button>;
+            })}
+          </div>
+        </motion.section>
       ))}
     </div>
-  );
-};
+  </div>
+);
 
 export default SectionWrapper(Tech, "");

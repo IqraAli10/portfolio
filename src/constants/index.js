@@ -42,20 +42,24 @@ export const navLinks = [
 
 const services = [
   {
-    title: "AI Developer",
-    icon: creator,
-  },
-  {
-    title: "Full Stack Developer",
+    title: "Frontend",
     icon: web,
   },
   {
-    title: "Backend Engineer",
-    icon: backend,
+    title: "UI Design",
+    icon: mobile,
   },
   {
-    title: "UI/UX Designer",
-    icon: mobile,
+    title: "Interaction",
+    icon: figma,
+  },
+  {
+    title: "Creative Development",
+    icon: threejs,
+  },
+  {
+    title: "Applied AI",
+    icon: creator,
   },
 ];
 
@@ -119,7 +123,7 @@ const experiences = [
     title: "AI Developer",
     company_name: "Freelance",
     icon: meta,
-    iconBg: "#383E56",
+    iconBg: "#29231F",
     date: "2023 - Present",
     points: [
       "Designing, training, and integrating AI models into production web apps.",
@@ -132,7 +136,7 @@ const experiences = [
     title: "Full Stack Developer",
     company_name: "Freelance",
     icon: reactjs,
-    iconBg: "#E6DEDD",
+    iconBg: "#D8C9BA",
     date: "2021 - Present",
     points: [
       "Developing scalable APIs with Node.js and secure, maintainable backends.",
@@ -172,67 +176,67 @@ const testimonials = [
 
 const projects = [
   {
-    name: "AI Car Finder",
+    name: "Nova",
     description:
-      "An AI-assisted platform to explore and compare cars with intelligent search, pricing insights, and a smooth booking flow.",
+      "A modern digital experience designed to make exploring Nova’s products and services feel clear, engaging, and effortless.",
     tags: [
       {
-        name: "react",
+        name: "product design",
         color: "blue-text-gradient",
       },
       {
-        name: "nodejs",
+        name: "web design",
         color: "green-text-gradient",
       },
       {
-        name: "tailwind",
+        name: "responsive",
         color: "pink-text-gradient",
       },
     ],
-    image: carrent,
-    source_code_link: "#",
+    image: "/nova.png",
+    source_code_link: "https://rotating-turnip-092303.framer.app/",
   },
   {
-    name: "AI Job Scout",
+    name: "Signalist",
     description:
-      "An intelligent job discovery app with semantic search, role matching, and location-aware recommendations.",
+      "A finance and market insights interface that brings watchlists, price movements, and company updates together in one place.",
     tags: [
       {
-        name: "react",
+        name: "fintech",
         color: "blue-text-gradient",
       },
       {
-        name: "restapi",
+        name: "dashboard",
         color: "green-text-gradient",
       },
       {
-        name: "scss",
+        name: "data visualization",
         color: "pink-text-gradient",
       },
     ],
-    image: jobit,
-    source_code_link: "#",
+    image: "/signalist.png",
+    source_code_link: "https://signalist-osddzsh3w-iqra-alis-projects.vercel.app/",
   },
   {
-    name: "Smart Trip Guide",
+    name: "MacBook",
     description:
-      "A travel companion that personalizes itineraries and bookings using AI-driven recommendations.",
+      "A clean product showcase for MacBook, highlighting its hardware, features, and details through a polished shopping experience.",
     tags: [
       {
-        name: "nextjs",
+        name: "e-commerce",
         color: "blue-text-gradient",
       },
       {
-        name: "supabase",
+        name: "product page",
         color: "green-text-gradient",
       },
       {
-        name: "css",
+        name: "responsive",
         color: "pink-text-gradient",
       },
     ],
-    image: tripguide,
-    source_code_link: "#",
+    image: "/macbook.png",
+    source_code_link: "https://macbook-smoky.vercel.app/",
   },
 ];
 
